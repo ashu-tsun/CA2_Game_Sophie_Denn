@@ -3,7 +3,6 @@ import Confiner from '../engine/confiner.js';
 import Platform from './platform.js';
 import Player from './player.js';
 
-
 class Level extends Game
 {
     constructor(canvasId)
