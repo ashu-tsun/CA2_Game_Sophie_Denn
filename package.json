@@ -1,0 +1,8 @@
+{
+    "name": "CA2_Game_Sophie_Denn",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "sophi",
+    "contributors": [],
+    "dependencies": {}
+}
