@@ -7,6 +7,7 @@ import Platform from './platform.js'
 import Animation from '../engine/Animation.js'
 import Animator from '../engine/Animator.js'
 import {RunImages} from '../engine/resources.js'
+import {IdleImages} from '../engine/resources.js'
 class Player extends GameObject
 {
     constructor(x, y, w, h)
@@ -17,8 +18,8 @@ class Player extends GameObject
         this.animator = new Animator('red',w,h);
         this.addComponent(this.animator);
         let run = new Animation('red',70,70, RunImages, 10);
-        let idle = new Animation('red', 70, 70, [RunImages[0]], 10);
-        let jump = new Animation('red', 70, 70, [RunImages[4]], 10);
+        let idle = new Animation('red', 70, 70, IdleImages, 10);
+        let jump = new Animation('red', 70, 70, [RunImages[3]], 10);
         
         this.animator.addAnimation("run", run);
         this.animator.addAnimation("idle", idle);
@@ -45,7 +46,7 @@ class Player extends GameObject
         
         if(input.isKeyDown("ArrowRight"))
         {
-            physics.velocity.x = this.speed;
+            physics.velocity.x = this.speed; 
             this.direction = -1;
             this.animator.setAnimation("run");
         } 
@@ -59,6 +60,11 @@ class Player extends GameObject
         {
             physics.velocity.x = 0;
             this.animator.setAnimation("idle");
+        }
+        
+        if(input.isKeyDown("KeyP"))
+        {
+            this.game.setPause();
         }
         
          if(input.isKeyDown("Space") && this.isOnPlatform)
@@ -87,7 +93,12 @@ class Player extends GameObject
                 }
             } 
         }
+        
         super.update(deltaTime);          
+    }
+    collidedWithEnemy()
+    {
+        this.game.removeGameObject(this);
     }
     
     startJump()
@@ -109,6 +120,8 @@ class Player extends GameObject
             this.isJumping = false;
         }
     }
+    
+
 
     
 }

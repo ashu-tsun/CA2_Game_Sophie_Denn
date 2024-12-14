@@ -26,7 +26,6 @@ class Animation extends Renderer {
   }
   // The draw method handles rendering the game object on the canvas.
   draw(ctx) {
-      console.log(this.image);
     // If an image is provided and it has finished loading, draw the image.
     if (this.image && this.image.complete) {
       // Get the position and dimensions of the game object.
