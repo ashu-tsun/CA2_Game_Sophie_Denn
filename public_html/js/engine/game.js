@@ -26,10 +26,6 @@ class Game {
     this.pause = false;
   }
 
-  setPause()
-  {
-      this.pause = !this.pause;
-  }
   // This method resizes the canvas to fill the window, with a small margin.
   resizeCanvas() {
     this.canvas.width = window.innerWidth - 50;
@@ -51,11 +47,9 @@ class Game {
 
     if(!this.pause)
     {
-        // Update all game objects and the camera.
         this.update();
         this.camera.update();
-        
-    }
+     }
     // Draw the game objects on the canvas.
     this.draw();
 
@@ -110,18 +104,13 @@ class Game {
 
   // This method resets the game to its initial state and then restarts it.
   reset() {
-    // Stop the game.
-    this.isRunning = false;
-
-    // Reset all game objects that have a reset method.
-    for (const gameObject of this.gameObjects) {
-      if (gameObject.reset) {
-        gameObject.reset();
-      }
-    }
-
-    // Restart the game.
-    this.start();
+    //Reload wouldnt work so i looked it up : https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+    window.location.reload();
+  }
+  
+   pauseGame()
+  {
+      this.pause = !this.pause;
   }
 }
 

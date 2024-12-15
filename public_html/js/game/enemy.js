@@ -2,59 +2,30 @@ import GameObject from "../engine/gameObject.js"
 import Renderer from '../engine/renderer.js';
 import Physics from '../engine/physics.js';
 import {Images} from '../engine/resources.js';
-
-
+import {EnemyImages} from '../engine/resources.js'
+import Animation from '../engine/Animation.js'
+import Animator from '../engine/Animator.js'
 import Player from './player.js';
 import Platform from './platform.js';
 
 class Enemy extends GameObject
 {
-    constructor(x, y)
+    constructor(x, y, w, h, speed)
     {
         super(x,y);
-        this.addComponent(new Renderer('green',50,50, Images.enemy));
-        this.addComponent(new Physics({x:50, y:0},{x:0, y:0}));
-        this.movementDistance = 0;
-        this.movementLimit = 100;
-        this.moveRight = true;
-
+        this.addComponent(new Physics({x:0, y:0},{x:0, y:0}));
+        this.speed = speed;
+        this.animator = new Animator('red',w,h);
+        this.addComponent(this.animator);
+        let idle = new Animation('red', 100, 100, EnemyImages, 10);
+        this.animator.addAnimation("idle", idle);
+        this.animator.setAnimation("idle");
     }
     update(deltaTime)
     {
-         let physics = this.getComponent(Physics);
+       let physics = this.getComponent(Physics);
        
-        if(this.moveRight)
-        {
-            if(this.movementDistance < this.movementLimit)
-            {
-                physics.velocity.x = 50;
-                this.movementDistance += Math.abs(physics.velocity.x) * deltaTime;
-                this.getComponent(Renderer).gameObject.direction = 1;
-
-            }
-            else
-            {
-                this.moveRight = false;
-                physics.velocity.x = 0;
-                this.movementDistance = 0;
-            }
-        }
-        else
-        {
-             if(this.movementDistance < this.movementLimit)
-            {
-                physics.velocity.x = -50;
-                this.movementDistance += Math.abs(physics.velocity.x) * deltaTime;
-                this.getComponent(Renderer).gameObject.direction = -1;
-
-            }
-            else
-            {
-                this.moveRight = true;
-                physics.velocity.x = 0;
-                this.movementDistance = 0;
-            }
-        }
+       this.x += this.speed;
         
         this.isOnPlatform = false;
         const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
@@ -79,6 +50,11 @@ class Enemy extends GameObject
         super.update(deltaTime);
 
         
+    }
+    
+    increaseSpeed()
+    {
+        this.speed = this.speed*2;
     }
     
 }

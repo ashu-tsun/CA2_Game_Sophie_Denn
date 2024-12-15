@@ -2,12 +2,13 @@ import GameObject from '../engine/gameobject.js'
 import Renderer from '../engine/renderer.js'
 import Physics from '../engine/physics.js'
 import Input from "../engine/input.js"
-import {Images} from '../engine/resources.js'
+import {Images, RunImages, IdleImages, AudioFiles} from '../engine/resources.js'
 import Platform from './platform.js'
 import Animation from '../engine/Animation.js'
 import Animator from '../engine/Animator.js'
-import {RunImages} from '../engine/resources.js'
-import {IdleImages} from '../engine/resources.js'
+import Collectible from './collectible.js'
+import Enemy from './enemy.js'
+import Deadly from './deadly.js'
 class Player extends GameObject
 {
     constructor(x, y, w, h)
@@ -31,10 +32,11 @@ class Player extends GameObject
         this.score = 0;
         this.defaultSpeed=100;
         this.speed = 100;
+        this.dead = false;
         
         this.isOnPlatform = false;
         this.isJumping = false;
-        this.jumpForce = 300;
+        this.jumpForce = 400;
         this.jumpTime = 1.0;
         this.jumpTimer = 0;
     }
@@ -62,14 +64,11 @@ class Player extends GameObject
             this.animator.setAnimation("idle");
         }
         
-        if(input.isKeyDown("KeyP"))
-        {
-            this.game.setPause();
-        }
         
          if(input.isKeyDown("Space") && this.isOnPlatform)
         {
             this.startJump();
+            AudioFiles.jump.play();
         }
        
         if(this.isJumping)
@@ -95,10 +94,35 @@ class Player extends GameObject
         }
         
         super.update(deltaTime);          
-    }
+    
+    
+        const collectibles = this.game.gameObjects.filter
+        ((obj)=> obj instanceof Collectible);
+        for(const coll of collectibles)
+        {
+            if(physics.isColliding(coll.getComponent(Physics)))
+            {
+                this.collectTreat(coll);
+            }
+        }
+        
+        const deadlyItems = this.game.gameObjects.filter
+        ((obj)=> obj instanceof Deadly);
+        for(const dead of deadlyItems)
+        {
+            if(physics.isColliding(dead.getComponent(Physics)))
+            {
+                this.collectOrb();
+            }
+        }
+        
+      
+
+    }   
     collidedWithEnemy()
     {
-        this.game.removeGameObject(this);
+        this.dead = true;
+        AudioFiles.die.play();
     }
     
     startJump()
@@ -121,8 +145,23 @@ class Player extends GameObject
         }
     }
     
+        collectTreat(collectible)
+    {
+        this.game.removeGameObject(collectible);
+        this.speed *= 1.6;
+        const enemy = this.game.gameObjects.find((obj)=> obj instanceof Enemy);
+        enemy.increaseSpeed();
+       this.score+=100;
+    }
+    
+        collectOrb()
+    {
+        this.dead = true;
+        AudioFiles.die.play();
+    }
+    
 
-
+s
     
 }
 export default Player
