@@ -10,13 +10,17 @@ import Platform from './platform.js';
 
 class Enemy extends GameObject
 {
-    constructor(x, y, w, h, speed)
+    //speed is also needed
+    constructor(x, y, w, h)
     {
         super(x,y);
         this.addComponent(new Physics({x:0, y:0},{x:0, y:0}));
-        this.speed = speed;
+        this.speed = 1;
+        
+        //Enemy animation is always idle
         this.animator = new Animator('red',w,h);
         this.addComponent(this.animator);
+        //Run animation
         let idle = new Animation('red', 100, 100, EnemyImages, 10);
         this.animator.addAnimation("idle", idle);
         this.animator.setAnimation("idle");
@@ -25,8 +29,10 @@ class Enemy extends GameObject
     {
        let physics = this.getComponent(Physics);
        
+       //Always move to the right with increasing speed
        this.x += this.speed;
         
+        //Platform collider
         this.isOnPlatform = false;
         const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
         for(const platform of platforms)
@@ -42,19 +48,28 @@ class Enemy extends GameObject
             }
         }
         
+        //Player collider
         const player = this.game.gameObjects.find((obj)=> obj instanceof Player);
         if(physics.isColliding(player.getComponent(Physics)))
         {
+            //If collided with player run the method in player
             player.collidedWithEnemy();
         }
+        //Update
         super.update(deltaTime);
-
         
+        //If the enemy has run to the end then end the game
+        if(this.x >= 10000)
+        {
+            player.collidedWithEnemy();
+             
+        }
     }
     
+    //Increases the enemy speed by 0.8, it will be faster than the player by the end
     increaseSpeed()
     {
-        this.speed = this.speed*2;
+        this.speed = this.speed*1.8;
     }
     
 }

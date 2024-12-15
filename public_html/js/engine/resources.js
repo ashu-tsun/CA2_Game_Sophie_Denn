@@ -51,7 +51,8 @@ const IdleImages =
 const AudioFiles = {
   jump: new Audio ('./resources/audio/jump.mp3'), // The file path of the jump sound.
   collect: new Audio ('./resources/audio/collect.mp3'), // The file path of the collect sound.
-  die: new Audio ('./resources/audio/frog.mp3')
+  die: new Audio ('./resources/audio/frog.mp3'),
+  bgm: new Audio ('./resources/audio/bgm.mp3')
 };
 
 // Set the source of the player image.

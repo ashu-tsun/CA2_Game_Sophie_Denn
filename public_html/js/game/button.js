@@ -39,10 +39,10 @@ class Button extends GameObject
         if(this.text === "Pause")
         {
             this.game.pauseGame();
-            if(this.game.pause)
-               this.game.audioManager.PauseSound("bgm");
-           else
-               this.game.audioManager.PlaySound("bgm");
+        }
+        if(this.text === "Play Again?")
+        {
+            this.game.reset();
         }
       }    
   }

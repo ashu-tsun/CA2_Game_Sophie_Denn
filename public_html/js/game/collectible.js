@@ -8,51 +8,47 @@ class Collectible extends GameObject
     constructor(x, y)
     {
         super(x, y);
+        //Render the snail image
         this.addComponent(new Renderer("yellow",50,50, Images.collectible));
-        this.addComponent(new Physics({x:50, y:0},{x:0, y:0},{x:0, y:0}));
-        this.movementDistance = 0;
-        this.movementLimit = 100;
-        this.moveRight = true;
-        this.tag = "treat";
+        this.addComponent(new Physics({x:0, y:0},{x:0, y:0},{x:0, y:0}));
+        this.tag = "snail";
+        
+        this.floatTime = 1.0;
+        this.timeFloating = this.floatTime;
+        this.vDirection = 1;
+        
+        this.maxWidth = 30;
+        this.hDirection = 1;
         
     }
     
-     update(deltaTime)
+    update(deltaTime)
     {
         let physics = this.getComponent(Physics);
-       
-        if(this.moveRight)
+        let renderer = this.getComponent(Renderer);
+        if(this.vDirection===1)
         {
-            if(this.movementDistance < this.movementLimit)
-            {
-                physics.velocity.x = 50;
-                this.movementDistance += Math.abs(physics.velocity.x) * deltaTime;
-                this.getComponent(Renderer).gameObject.direction = 1;
-
-            }
-            else
-            {
-                this.moveRight = false;
-                physics.velocity.x = 0;
-                this.movementDistance = 0;
-            }
+            physics.velocity.y = -50;
         }
         else
         {
-             if(this.movementDistance < this.movementLimit)
-            {
-                physics.velocity.x = -50;
-                this.movementDistance += Math.abs(physics.velocity.x) * deltaTime;
-                this.getComponent(Renderer).gameObject.direction = -1;
-
-            }
-            else
-            {
-                this.moveRight = true;
-                physics.velocity.x = 0;
-                this.movementDistance = 0;
-            }
+            physics.velocity.y = 50;
         }
+        this.timeFloating -= deltaTime;
+        if(this.timeFloating < 0)
+        {
+            this.timeFloating = this.floatTime;
+            this.vDirection *=-1;
+            physics.velocity.y=0;
+        }
+        
+        renderer.width += this.hDirection;
+        this.x += (this.hDirection/2)*-1;
+        if(renderer.width > 30 || renderer.width <1)
+        {
+            this.hDirection *=-1;
+        }
+        super.update(deltaTime);
         
         this.isOnPlatform = false;
         const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
@@ -68,11 +64,7 @@ class Collectible extends GameObject
 
             }
         }
-        
-        
     }
-    
-  
 }
 
 export default Collectible
