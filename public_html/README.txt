@@ -1,4 +1,4 @@
-Instructions
+Instructions for Game
 
 Arrow Keys to move, space to jump.
 
