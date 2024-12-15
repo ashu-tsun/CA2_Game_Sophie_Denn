@@ -5,11 +5,14 @@
         <group>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/engine/game.js</file>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/collectible.js</file>
-            <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/button.js</file>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/enemy.js</file>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/level.js</file>
+            <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/engine/ui.js</file>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/engine/resources.js</file>
+            <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/deadly.js</file>
+            <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/engine/renderer.js</file>
             <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/player.js</file>
+            <file>file:/C:/xampp/htdocs/CA2_Game_Sophie_Denn/public_html/js/game/playerUI.js</file>
         </group>
     </open-files>
 </project-private>

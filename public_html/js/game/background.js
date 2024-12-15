@@ -4,9 +4,10 @@ import {Images} from '../engine/resources.js'
 
 class Background extends GameObject
 {
-    constructor(x, y, w, h, color="white")
+    constructor(x, y)
     {
         super(x, y);
+        //Add the background as an image
         this.addComponent(new Renderer('red', 1500, 2000,Images.background));
         this.tag = "background";
     }

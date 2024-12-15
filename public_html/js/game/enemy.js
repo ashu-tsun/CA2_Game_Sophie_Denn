@@ -32,14 +32,16 @@ class Enemy extends GameObject
        //Always move to the right with increasing speed
        this.x += this.speed;
         
-        //Platform collider
+        //Platform collider, set on pplatfrom to false
         this.isOnPlatform = false;
+        //store all instances of platforms
         const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
         for(const platform of platforms)
         {
-           
+           //If colliding with platform
             if(physics.isColliding(platform.getComponent(Physics)))
             {
+                //stop vertical movement and place the enemy on the platfrom
                 physics.velocity.y = 0;
                 physics.acceleration.y = 0;
                 this.y = platform.y - this.getComponent(Renderer).height;
@@ -48,8 +50,9 @@ class Enemy extends GameObject
             }
         }
         
-        //Player collider
+        //Player collider, store all instamces of player
         const player = this.game.gameObjects.find((obj)=> obj instanceof Player);
+        //if colliding with player
         if(physics.isColliding(player.getComponent(Physics)))
         {
             //If collided with player run the method in player

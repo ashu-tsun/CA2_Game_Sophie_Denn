@@ -23,6 +23,7 @@ class Game {
     window.addEventListener('resize', () => this.resizeCanvas());
     // Instantiate a new camera without a target and with dimensions equal to the canvas size.
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
+    //set pause to false
     this.pause = false;
   }
 
@@ -45,6 +46,7 @@ class Game {
     // Update the last frame time.
     this.lastFrameTime = currentFrameTime;
 
+    //If the game is not paused then update it and the camera
     if(!this.pause)
     {
         this.update();
@@ -108,6 +110,7 @@ class Game {
     window.location.reload();
   }
   
+  //Pauses the game
    pauseGame()
   {
       this.pause = !this.pause;

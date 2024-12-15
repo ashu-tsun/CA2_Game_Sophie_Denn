@@ -15,53 +15,55 @@ class Collectible extends GameObject
         
         this.floatTime = 1.0;
         this.timeFloating = this.floatTime;
-        this.vDirection = 1;
-        
-        this.maxWidth = 30;
         this.hDirection = 1;
         
     }
     
     update(deltaTime)
     {
+        //Just the collectable code from the powerpoint with some changes
         let physics = this.getComponent(Physics);
-        let renderer = this.getComponent(Renderer);
-        if(this.vDirection===1)
+        //Check horizontal movement
+        if(this.hDirection===1)
         {
-            physics.velocity.y = -50;
+            //If moving left, move the collectable left and change the direction of the snail
+            physics.velocity.x = -50;
+            this.direction = 1;
         }
         else
         {
-            physics.velocity.y = 50;
+            //Otherwise, move the colllectable and flip the snail
+            physics.velocity.x = 50;
+            this.direction =-1;
         }
+        //Decrease the remaining float time by how much time has passed
         this.timeFloating -= deltaTime;
+        //If there is no float time remaining
         if(this.timeFloating < 0)
         {
+            //Reset the time, change vertical direction and stop the collectable from moving
             this.timeFloating = this.floatTime;
-            this.vDirection *=-1;
-            physics.velocity.y=0;
+            this.hDirection *=-1;
+            physics.velocity.x=0;
         }
         
-        renderer.width += this.hDirection;
-        this.x += (this.hDirection/2)*-1;
-        if(renderer.width > 30 || renderer.width <1)
-        {
-            this.hDirection *=-1;
-        }
+        //Update the time
         super.update(deltaTime);
         
+        //set on platfrom to false and for all instances of platforms
         this.isOnPlatform = false;
         const platforms = this.game.gameObjects.filter((obj)=> obj instanceof Platform);
         for(const platform of platforms)
         {
-           
+           //If there is a collision with a platfroom
             if(physics.isColliding(platform.getComponent(Physics)))
             {
+                //Stop movement vertically
                 physics.velocity.y = 0;
                 physics.acceleration.y = 0;
+                //Place the collectable on the platform and set on platform to true
                 this.y = platform.y - this.getComponent(Renderer).height;
                 this.isOnPlatform = true;
-
             }
         }
     }

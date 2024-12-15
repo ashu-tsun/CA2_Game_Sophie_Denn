@@ -5,13 +5,13 @@ import HorizontalTileRenderer from '../engine/horizontalTileRenderer.js'
 import {Images} from '../engine/resources.js'
 class Platform extends GameObject
 {
-    constructor(x, y, w, h, img, color = "blue")
+    constructor(x, y, w, h, color = "blue")
     {
         super(x, y);
-        
+        //Add the tile renderer to the platform
         this.addComponent(new HorizontalTileRenderer(color, w, h, Images.tiles));
+        //Add physics
         this.addComponent(new Physics({x:0, y:0},{x:0, y:0},{x:0, y:0}));
-        
         this.tag = "platform";
     }
 }

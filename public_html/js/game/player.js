@@ -14,33 +14,40 @@ class Player extends GameObject
     constructor(x, y, w, h)
     {
         super(x, y);        
+        //Ad physics, renderer and input component
         this.addComponent(new Physics({x:0, y:0}, {x:0, y:0}) );
         this.addComponent(new Input());
         this.animator = new Animator('red',w,h);
         this.addComponent(this.animator);
         
-        //Animations for different states
+        //Animations for different states, run, idle and jump
         let run = new Animation('red',70,70, RunImages, 10);
         let idle = new Animation('red', 70, 70, IdleImages, 10);
         let jump = new Animation('red', 70, 70, [RunImages[3]], 10);
         
+        //Add the animations
         this.animator.addAnimation("run", run);
         this.animator.addAnimation("idle", idle);
         this.animator.addAnimation("jump", jump);
+        //Set the play to idle
         this.animator.setAnimation("idle");
         
         this.tag = "player";
+        //Set on platfrom to false and direction to be 1
         this.isOnPlatform = false;
         this.direction = 1;
         
-        //Player scoer
+        //Player score
         this.score = 0;
+        //Player speed
         this.speed = 100;
         //Check if player has died
         this.dead = false;
         //Check if player has won
         this.won = false;
-
+        this.time = 0;
+        this.finalTime = 0;
+        //Jumping variables
         this.isJumping = false;
         this.jumpForce = 400;
         this.jumpTime = 1.0;
@@ -52,11 +59,15 @@ class Player extends GameObject
         const physics = this.getComponent(Physics);
         const input = this.getComponent(Input);
         
+        //Increases the timer by an amount that feels natural (trial an error)
+        this.time = this.time += 0.015;	 
+
         //Input directions
         if(input.isKeyDown("ArrowRight"))
         {
-            //Move in direction
+            //Move right by the speed
             physics.velocity.x = this.speed; 
+            //Change the direction
             this.direction = -1;
             //Play run animation
             this.animator.setAnimation("run");
@@ -64,7 +75,9 @@ class Player extends GameObject
         else if(input.isKeyDown("ArrowLeft"))
         {
             physics.velocity.x = -this.speed;
+            //Change the direction
             this.direction = 1;
+            //Play run animation
             this.animator.setAnimation("run");
         }
         else
@@ -77,6 +90,7 @@ class Player extends GameObject
         
          if(input.isKeyDown("Space") && this.isOnPlatform)
         {
+            //Run nump method
             this.startJump();
             //Play jump sound
             AudioFiles.jump.play();
@@ -91,16 +105,21 @@ class Player extends GameObject
         
         
         //Platform collider
+        //Store instances of platforms
         const platforms = this.game.gameObjects.filter((obj) => obj instanceof Platform);
+        //For all platforms
         for(const platform of platforms)
         {
+            //If colliding with platform
              if(physics.isColliding(platform.getComponent(Physics)))
             {
+                //If the player isnt jumping
                 if (!this.isJumping) 
                 {
                     //Stop movement
                     physics.acceleration.y = 0;
                     physics.velocity.y = 0;
+                    //Place the player on top of the platform
                     this.y = platform.y - this.getComponent(Renderer).height;
                     this.isOnPlatform = true;
                 }
@@ -110,8 +129,8 @@ class Player extends GameObject
         super.update(deltaTime);          
     
         //Collectible collider (snail)
-        const collectibles = this.game.gameObjects.filter
-        ((obj)=> obj instanceof Collectible);
+        //Store all instances of collectable
+        const collectibles = this.game.gameObjects.filter((obj)=> obj instanceof Collectible);
         for(const coll of collectibles)
         {
             //If player collides with snail
@@ -125,8 +144,8 @@ class Player extends GameObject
         }
         
         //Harmful Slimes collider
-        const deadlyItems = this.game.gameObjects.filter
-        ((obj)=> obj instanceof Deadly);
+        //Store all instances of snail/ deadly items
+        const deadlyItems = this.game.gameObjects.filter((obj)=> obj instanceof Deadly);
         for(const dead of deadlyItems)
         {
             //If collided with slime
@@ -141,6 +160,7 @@ class Player extends GameObject
         if(this.score === 500)
         {
             this.won = true;
+            this.finalTime = this.time;
         } 
     }   
     //If collided with enemy
@@ -152,20 +172,27 @@ class Player extends GameObject
         AudioFiles.die.play();
     }
     
+    //Start jump
     startJump()
     {
+        //If on platfrom jump
         if(this.isOnPlatform)
         {
             this.isJumping = true;
             this.jumpTimer = this.jumpTime;
+            //Appky the jump force to the player
             this.getComponent(Physics).velocity.y = -this.jumpForce;
+            //Set on platfrom to false
             this.isOnPlatform = false;
         }
     }
     
+    //Update the jump
     updateJump(deltaTime)
     {
+        //Reduce the jump timer
         this.jumpTimer -= deltaTime;
+        //Set jumping to false when the timer runs out or falling
         if(this.jumpTimer <=0 || this.getComponent(Physics).velocity.y > 0)
         {
             this.isJumping = false;
